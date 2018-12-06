@@ -37,7 +37,7 @@ const api = {
   error: jm => async job =>
     jm.save({ _id: job._id, error: job.error, status: "error" }),
   exit: jm => async () => jm.mongo && jm.mongo.close(),
-  find: jm => async (...args) => jm.col.find(...args)
+  find: jm => async (...args) => jm.col.find(...args),
   finish: jm => async job =>
     jm.save({
       _id: job._id,
