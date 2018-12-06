@@ -25,7 +25,15 @@ const DB = async (dbName, url = "mongodb://localhost:27017") => {
 };
 
 const api = {
-  create: jm => async job => jm.save({ ...job }),
+  create: jm => async job => {
+    try {
+      return await jm.col.insertOne({
+        ...job,
+        status: "queued",
+        createdAt: new Date()
+      });
+    } catch (e) {}
+  },
   error: jm => async job =>
     jm.save({ _id: job._id, error: job.error, status: "error" }),
   exit: jm => async () => jm.mongo && jm.mongo.close(),
@@ -95,11 +103,7 @@ const api = {
   save: jm => async job => {
     let { _id, ...upd } = job;
     if (!_id) _id = getJobId(job);
-    return jm.col.updateOne(
-      { _id },
-      { $set: upd, $setOnInsert: { createdAt: new Date(), status: "queued" } },
-      { upsert: true }
-    );
+    return jm.col.updateOne({ _id }, { $set: upd }, { upsert: true });
   }
 };
 
