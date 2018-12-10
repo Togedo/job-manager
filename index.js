@@ -27,6 +27,7 @@ const DB = async (dbName, url = "mongodb://localhost:27017") => {
 const api = {
   create: jm => async job => {
     try {
+      if (!job._id) job._id = getJobId(job)
       return await jm.col.insertOne({
         ...job,
         status: "queued",
