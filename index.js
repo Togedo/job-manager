@@ -25,15 +25,17 @@ const DB = async (dbName, url = "mongodb://localhost:27017") => {
 };
 
 const api = {
-  create: jm => async job => {
-    try {
-      if (!job._id) job._id = getJobId(job)
-      return await jm.col.insertOne({
-        ...job,
-        status: "queued",
-        createdAt: new Date()
-      });
-    } catch (e) {}
+  create: jm => async (...jobs) => {
+    for (let i = 0; i < jobs.length; i++) {
+      try {
+        if (!jobs[i]._id) jobs[i]._id = getJobId(jobs[i]);
+        await jm.col.insertOne({
+          ...jobs[i],
+          status: "queued",
+          createdAt: new Date()
+        });
+      } catch (e) {}
+    }
   },
   error: jm => async job =>
     jm.save({ _id: job._id, error: job.error, status: "error" }),
@@ -46,6 +48,8 @@ const api = {
       completedAt: new Date(),
       status: "done"
     }),
+  getSetting: jm => (jobType, setting) =>
+    jm.jobs[jobType][setting] || jm[setting],
   load: jm => async job => {
     try {
       return jm.col.findOne(job);
@@ -96,11 +100,27 @@ const api = {
       return e;
     }
   },
-  runAll: jm => async type => {
-    let r;
-    do {
-      r = await jm.run(type);
-    } while (r !== noJob);
+  runAll: jm => async (...types) => {
+    if (types.length === 0 || !types) types = Object.keys(jm.executors);
+    for (let i = 0; i < types.length; i++) {
+      let r;
+      do {
+        r = await jm.run(types[i]);
+      } while (r !== noJob);
+    }
+  },
+  startWatch: jm => async (...types) => {
+    if (jm.stopWatching) {
+      jm.watching = false;
+      jm.stopWatching = false;
+      return;
+    }
+    jm.watching = true;
+    await jm.runAll(...types);
+    setTimeout(() => jm.startWatch(...types), 5000);
+  },
+  stopWatch: jm => async () => {
+    jm.stopWatching = true;
   },
   save: jm => async job => {
     let { _id, ...upd } = job;
@@ -117,6 +137,13 @@ const heartbeat = jm => {
   setTimeout(() => heartbeat(jm), jm.heartbeatInterval);
 };
 
+jobs = {
+  a: async () => {},
+  b: {
+    maxTries: 10,
+    runner: () => {}
+  }
+};
 const JobManager = async (
   db,
   {
@@ -143,6 +170,7 @@ const JobManager = async (
     abandonedDelay,
     heartbeatInterval,
     maxTries,
+    watching: false,
     workerId: workerId || (await getWorkerId())
   };
   Object.entries(api).forEach(([name, func]) => {
