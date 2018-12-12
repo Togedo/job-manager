@@ -24,6 +24,14 @@ const DB = async (dbName, url = "mongodb://localhost:27017") => {
   return mongo;
 };
 
+// jobs = {
+//   a: async () => {},
+//   b: {
+//     maxTries: 10,
+//     runner: () => {}
+//   }
+// };
+
 const api = {
   create: jm => async (...jobs) => {
     for (let i = 0; i < jobs.length; i++) {
@@ -49,7 +57,7 @@ const api = {
       status: "done"
     }),
   getSetting: jm => (jobType, setting) =>
-    jm.jobs[jobType][setting] || jm[setting],
+    jm.executors[jobType][setting] || jm[setting],
   load: jm => async job => {
     try {
       return jm.col.findOne(job);
@@ -63,10 +71,12 @@ const api = {
         $or: [
           {
             status: "active",
-            updatedAt: { $lt: new Date(now - jm.abandonedDelay) }
+            updatedAt: {
+              $lt: new Date(now - jm.getSetting(type, "abandonedDelay"))
+            }
           },
           { status: "queued" },
-          { status: "error", nTries: { $lt: 3 } }
+          { status: "error", nTries: { $lt: jm.getSetting(type, "maxTries") } }
         ]
       },
       {
@@ -91,7 +101,13 @@ const api = {
     const job = await jm.pick(type);
     if (!job) return noJob;
     try {
-      const result = await jm.executors[type](job.data, jm);
+      const runner =
+        typeof jm.executors[type] === "object"
+          ? jm.executors[type].runner
+          : jm.executors[type];
+
+      result = await runner(job.data, jm);
+
       await jm.finish({ ...job, result });
       return result;
     } catch (e) {
@@ -137,13 +153,6 @@ const heartbeat = jm => {
   setTimeout(() => heartbeat(jm), jm.heartbeatInterval);
 };
 
-jobs = {
-  a: async () => {},
-  b: {
-    maxTries: 10,
-    runner: () => {}
-  }
-};
 const JobManager = async (
   db,
   {
