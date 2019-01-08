@@ -24,14 +24,6 @@ const DB = async (dbName, url = "mongodb://localhost:27017") => {
   return mongo;
 };
 
-// jobs = {
-//   a: async () => {},
-//   b: {
-//     maxTries: 10,
-//     runner: () => {}
-//   }
-// };
-
 const api = {
   create: jm => async (...jobs) => {
     for (let i = 0; i < jobs.length; i++) {
@@ -68,15 +60,28 @@ const api = {
     const r = await jm.col.updateOne(
       {
         type,
-        $or: [
+        $and: [
           {
-            status: "active",
-            updatedAt: {
-              $lt: new Date(now - jm.getSetting(type, "abandonedDelay"))
-            }
+            $or: [
+              { scheduledTime: null },
+              { scheduledTime: { $lte: new Date() } }
+            ]
           },
-          { status: "queued" },
-          { status: "error", nTries: { $lt: jm.getSetting(type, "maxTries") } }
+          {
+            $or: [
+              {
+                status: "active",
+                updatedAt: {
+                  $lt: new Date(now - jm.getSetting(type, "abandonedDelay"))
+                }
+              },
+              { status: "queued" },
+              {
+                status: "error",
+                nTries: { $lt: jm.getSetting(type, "maxTries") }
+              }
+            ]
+          }
         ]
       },
       {
