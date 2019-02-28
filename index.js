@@ -17,10 +17,7 @@ const getJobId = ({ data, type }) => sha1(type + stringify(data));
 const getWorkerId = async () => `${await getmac()}_${process.pid}`;
 
 const DB = async (dbName, url = "mongodb://localhost:27017") => {
-  const mongo = await MongoClient.connect(
-    url,
-    { useNewUrlParser: true }
-  );
+  const mongo = await MongoClient.connect(url, { useNewUrlParser: true });
   return mongo;
 };
 
@@ -57,7 +54,7 @@ const api = {
   },
   pick: jm => async type => {
     const now = new Date();
-    const r = await jm.col.updateOne(
+    const r = await jm.col.findOneAndUpdate(
       {
         type,
         $and: [
@@ -92,9 +89,16 @@ const api = {
           updatedAt: now,
           worker: jm.workerId
         }
+      },
+      {
+        returnNewDocument: true,
+        sort: {
+          priority: -1,
+          createdAt: 1
+        }
       }
     );
-    if (r.result.nModified)
+    if (r.value)
       return jm.load({
         status: "active",
         worker: jm.workerId
@@ -127,21 +131,22 @@ const api = {
       let r;
       do {
         r = await jm.run(types[i]);
+        if (jm.stopped) break;
       } while (r !== noJob);
     }
   },
   startWatch: jm => async (...types) => {
-    if (jm.stopWatching) {
-      jm.watching = false;
-      jm.stopWatching = false;
-      return;
-    }
     jm.watching = true;
     await jm.runAll(...types);
-    setTimeout(() => jm.startWatch(...types), 5000);
+    setTimeout(async () => {
+      if (jm.watching) await jm.startWatch(...types);
+    }, jm.watchInterval);
   },
   stopWatch: jm => async () => {
-    jm.stopWatching = true;
+    jm.watching = false;
+  },
+  stop: jm => async () => {
+    jm.stopped = true;
   },
   save: jm => async job => {
     let { _id, ...upd } = job;
@@ -163,8 +168,9 @@ const JobManager = async (
   {
     colName = "jobs",
     executors = {},
-    heartbeatInterval = 5000,
     abandonedDelay = 10000,
+    heartbeatInterval = 5000,
+    watchInterval = 5000,
     maxTries = 3,
     workerId
   } = {}
@@ -184,6 +190,8 @@ const JobManager = async (
     abandonedDelay,
     heartbeatInterval,
     maxTries,
+    watchInterval,
+    stopped: false,
     watching: false,
     workerId: workerId || (await getWorkerId())
   };
@@ -193,7 +201,5 @@ const JobManager = async (
   heartbeat(ctx);
   return ctx;
 };
-
-const now = async (n, fn) => console.log(n, await fn());
 
 module.exports = JobManager;
