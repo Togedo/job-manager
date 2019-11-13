@@ -400,25 +400,25 @@ eachr@^3.2.0:
     editions "^1.1.1"
     typechecker "^4.3.0"
 
-editions@^1.1.1, editions@^1.3.4:
+editions@^1.1.1:
   version "1.3.4"
   resolved "https://npm.togedo.com/editions/-/editions-1.3.4.tgz#3662cb592347c3168eb8e498a0ff73271d67f50b"
   integrity sha512-gzao+mxnYDzIysXKMQi/+M1mjy/rjestjg6OPoYTtI+3Izp23oiGZitsl9lPDPiTGXbcSIk1iJWhliSaglxnUg==
 
-editions@^2.0.2:
-  version "2.1.0"
-  resolved "https://npm.togedo.com/editions/-/editions-2.1.0.tgz#5c6f6341ef19ee362a3bcbb907fe68e696dbc69e"
-  integrity sha512-yKrimWcvOXcYXtqsOeebbMLynm9qbYVd0005wveGU2biPxJaJoxA0jtaZrxiMe3mAanLr5lxoYFVz5zjv9JdnA==
+editions@^2.0.2, editions@^2.1.3, editions@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/editions/-/editions-2.2.0.tgz#dacd0c2a9441ebef592bba316a6264febb337f35"
+  integrity sha512-RYg3iEA2BDLCNVe8PUkD+ox5vAKxB9XS/mAhx1bdxGCF0CpX077C0pyTA9t5D6idCYA3avl5/XDHKPsHFrygfw==
   dependencies:
-    errlop "^1.0.3"
-    semver "^5.6.0"
+    errlop "^1.1.2"
+    semver "^6.3.0"
 
-errlop@^1.0.3:
-  version "1.0.3"
-  resolved "https://npm.togedo.com/errlop/-/errlop-1.0.3.tgz#dba29c90cf832c3d2ce469fe515d7e5eef2c6676"
-  integrity sha512-5VTnt0yikY4LlQEfCXVSqfE6oLj1HVM4zVSvAKMnoYjL/zrb6nqiLowZS4XlG7xENfyj7lpYWvT+wfSCr6dtlA==
+errlop@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/errlop/-/errlop-1.1.2.tgz#a99a48f37aa264d614e342ffdbbaa49eec9220e0"
+  integrity sha512-djkRp+urJ+SmqDBd7F6LUgm4Be1TTYBxia2bhjNdFBuBDQtJDHExD2VbxR6eyst3h1TZy3qPRCdqb6FBoFttTA==
   dependencies:
-    editions "^1.3.4"
+    editions "^2.1.3"
 
 escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -480,14 +480,14 @@ extglob@^2.0.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-extract-opts@^3.2.0:
-  version "3.3.1"
-  resolved "https://npm.togedo.com/extract-opts/-/extract-opts-3.3.1.tgz#5abbedc98c0d5202e3278727f9192d7e086c6be1"
-  integrity sha1-WrvtyYwNUgLjJ4cn+Rktfghsa+E=
+extract-opts@^3.3.1:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/extract-opts/-/extract-opts-3.4.0.tgz#ab07a7873896a1a7e350f27e2d52645c2ceba9ac"
+  integrity sha512-M7Y+1cJDkzOWqvGH5F/V2qgkD6+uitW3NV9rQGl+pLSVuXZ4IDDQgxxMeLPKcWUyfypBWczIILiroSuhXG7Ytg==
   dependencies:
     eachr "^3.2.0"
-    editions "^1.1.1"
-    typechecker "^4.3.0"
+    editions "^2.2.0"
+    typechecker "^4.9.0"
 
 fast-stable-stringify@^1.0.0:
   version "1.0.0"
@@ -560,13 +560,13 @@ get-value@^2.0.3, get-value@^2.0.6:
   resolved "https://npm.togedo.com/get-value/-/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
 
-getmac@^1.4.6:
-  version "1.4.6"
-  resolved "https://npm.togedo.com/getmac/-/getmac-1.4.6.tgz#ffe7db07900e222916939d44e4c7274adbecc662"
-  integrity sha512-3JPwiIr4P6Sgr6y6SVXX0+l2mrB6pyf4Cdyua7rvEV7SveWQkAp11vrkNym8wvRxzLrBenKRcwe93asdghuwWg==
+getmac@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/getmac/-/getmac-1.5.0.tgz#d07d09f75e6a12a921007be106e74a69110c9053"
+  integrity sha512-J3/sNFjlVS7/KyS5L70nvubmhpELgz2V/Izd/fjmhmTujT1IKCyw7njHDxTVJNSalVwwaTSz0hA0Wb8S18daEQ==
   dependencies:
-    editions "^2.0.2"
-    extract-opts "^3.2.0"
+    editions "^2.2.0"
+    extract-opts "^3.3.1"
 
 glob-parent@^3.1.0:
   version "3.1.0"
@@ -1441,10 +1441,15 @@ semver-diff@^2.0.0:
   dependencies:
     semver "^5.0.3"
 
-semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.5.0, semver@^5.6.0:
+semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.5.0:
   version "5.6.0"
   resolved "https://npm.togedo.com/semver/-/semver-5.6.0.tgz#7e74256fbaa49c75aa7c7a205cc22799cac80004"
   integrity sha512-RS9R6R35NYgQn++fkDWaOmqGoj4Ek9gGs+DPxNUZKuwE183xjJroKvyo1IzVFeXvUrvmALy6FWD5xrdJT25gMg==
+
+semver@^6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
+  integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
 
 set-blocking@~2.0.0:
   version "2.0.0"
@@ -1687,6 +1692,13 @@ typechecker@^4.3.0:
   integrity sha512-83OrXpyP3LNr7aRbLkt2nkjE/d7q8su8/uRvrKxCpswqVCVGOgyaKpaz8/MTjQqBYe4eLNuJ44pNakFZKqyPMA==
   dependencies:
     editions "^2.0.2"
+
+typechecker@^4.9.0:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/typechecker/-/typechecker-4.9.0.tgz#e00a0102f858571c7c5cb8af7f440695decae334"
+  integrity sha512-gN9+YYaQ9N8JZpCHJq0z1thokA5UfpzF3NbCJzJbM/vW7XtEZ5QyGE7I0RrBUEaLHDUf/MUXlmVpnVBDfE6AoQ==
+  dependencies:
+    editions "^2.2.0"
 
 undefsafe@^2.0.2:
   version "2.0.2"
