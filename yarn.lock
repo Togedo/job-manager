@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@types/node@^12.12.14":
+  version "12.12.16"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.16.tgz#3ebcbd7bf978fa4c5120fee8be57083271a8b3ac"
+  integrity sha512-vRuMyoOr5yfNf8QWxXegOjeyjpWJxFePzHzmBOIzDIzo+rSqF94RW0PkS6y4T2+VjAWLXHWrfbIJY3E3aS7lUw==
+
 abbrev@1:
   version "1.1.1"
   resolved "https://npm.togedo.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -392,34 +397,6 @@ duplexer3@^0.1.4:
   resolved "https://npm.togedo.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
   integrity sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=
 
-eachr@^3.2.0:
-  version "3.2.0"
-  resolved "https://npm.togedo.com/eachr/-/eachr-3.2.0.tgz#2c35e43ea086516f7997cf80b7aa64d55a4a4484"
-  integrity sha1-LDXkPqCGUW95l8+At6pk1VpKRIQ=
-  dependencies:
-    editions "^1.1.1"
-    typechecker "^4.3.0"
-
-editions@^1.1.1, editions@^1.3.4:
-  version "1.3.4"
-  resolved "https://npm.togedo.com/editions/-/editions-1.3.4.tgz#3662cb592347c3168eb8e498a0ff73271d67f50b"
-  integrity sha512-gzao+mxnYDzIysXKMQi/+M1mjy/rjestjg6OPoYTtI+3Izp23oiGZitsl9lPDPiTGXbcSIk1iJWhliSaglxnUg==
-
-editions@^2.0.2:
-  version "2.1.0"
-  resolved "https://npm.togedo.com/editions/-/editions-2.1.0.tgz#5c6f6341ef19ee362a3bcbb907fe68e696dbc69e"
-  integrity sha512-yKrimWcvOXcYXtqsOeebbMLynm9qbYVd0005wveGU2biPxJaJoxA0jtaZrxiMe3mAanLr5lxoYFVz5zjv9JdnA==
-  dependencies:
-    errlop "^1.0.3"
-    semver "^5.6.0"
-
-errlop@^1.0.3:
-  version "1.0.3"
-  resolved "https://npm.togedo.com/errlop/-/errlop-1.0.3.tgz#dba29c90cf832c3d2ce469fe515d7e5eef2c6676"
-  integrity sha512-5VTnt0yikY4LlQEfCXVSqfE6oLj1HVM4zVSvAKMnoYjL/zrb6nqiLowZS4XlG7xENfyj7lpYWvT+wfSCr6dtlA==
-  dependencies:
-    editions "^1.3.4"
-
 escape-string-regexp@^1.0.5:
   version "1.0.5"
   resolved "https://npm.togedo.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
@@ -479,15 +456,6 @@ extglob@^2.0.4:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
-
-extract-opts@^3.2.0:
-  version "3.3.1"
-  resolved "https://npm.togedo.com/extract-opts/-/extract-opts-3.3.1.tgz#5abbedc98c0d5202e3278727f9192d7e086c6be1"
-  integrity sha1-WrvtyYwNUgLjJ4cn+Rktfghsa+E=
-  dependencies:
-    eachr "^3.2.0"
-    editions "^1.1.1"
-    typechecker "^4.3.0"
 
 fast-stable-stringify@^1.0.0:
   version "1.0.0"
@@ -560,13 +528,12 @@ get-value@^2.0.3, get-value@^2.0.6:
   resolved "https://npm.togedo.com/get-value/-/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
 
-getmac@^1.4.6:
-  version "1.4.6"
-  resolved "https://npm.togedo.com/getmac/-/getmac-1.4.6.tgz#ffe7db07900e222916939d44e4c7274adbecc662"
-  integrity sha512-3JPwiIr4P6Sgr6y6SVXX0+l2mrB6pyf4Cdyua7rvEV7SveWQkAp11vrkNym8wvRxzLrBenKRcwe93asdghuwWg==
+getmac@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/getmac/-/getmac-4.4.0.tgz#805c5106e4de912839870866168e79e13c41f272"
+  integrity sha512-QZNrz6WrF2aMe7eg6IDnIaA0iK31Zt51Yi9U6hOuy5bcI6QlvmKXF+ozcrfT5+GSziWxumUy2Q6MiaFta0XcEg==
   dependencies:
-    editions "^2.0.2"
-    extract-opts "^3.2.0"
+    "@types/node" "^12.12.14"
 
 glob-parent@^3.1.0:
   version "3.1.0"
@@ -1441,7 +1408,7 @@ semver-diff@^2.0.0:
   dependencies:
     semver "^5.0.3"
 
-semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.5.0, semver@^5.6.0:
+semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.5.0:
   version "5.6.0"
   resolved "https://npm.togedo.com/semver/-/semver-5.6.0.tgz#7e74256fbaa49c75aa7c7a205cc22799cac80004"
   integrity sha512-RS9R6R35NYgQn++fkDWaOmqGoj4Ek9gGs+DPxNUZKuwE183xjJroKvyo1IzVFeXvUrvmALy6FWD5xrdJT25gMg==
@@ -1680,13 +1647,6 @@ touch@^3.1.0:
   integrity sha512-WBx8Uy5TLtOSRtIq+M03/sKDrXCLHxwDcquSP2c43Le03/9serjQBIztjRz6FkJez9D/hleyAXTBGLwwZUw9lA==
   dependencies:
     nopt "~1.0.10"
-
-typechecker@^4.3.0:
-  version "4.6.0"
-  resolved "https://npm.togedo.com/typechecker/-/typechecker-4.6.0.tgz#d245d9c2df21147d5e2a942fff170b68ece73c87"
-  integrity sha512-83OrXpyP3LNr7aRbLkt2nkjE/d7q8su8/uRvrKxCpswqVCVGOgyaKpaz8/MTjQqBYe4eLNuJ44pNakFZKqyPMA==
-  dependencies:
-    editions "^2.0.2"
 
 undefsafe@^2.0.2:
   version "2.0.2"
