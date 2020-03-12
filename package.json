@@ -12,7 +12,7 @@
   "dependencies": {
     "fast-stable-stringify": "^1.0.0",
     "getmac": "^1.4.6",
-    "mongodb": "^3.1.10",
+    "mongodb": "^3.5.5",
     "sha1": "^1.1.1"
   }
 }
