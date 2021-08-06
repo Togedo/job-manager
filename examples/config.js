@@ -26,11 +26,23 @@ const sleep = s => new Promise(done => setTimeout(done, s));
     }
   });
 
+  console.log('started JM')
+
   await jm.removeAll();
+
+  await sleep(2000)
+
+  console.log('removed old tasks')
 
   for (let i = 0; i < 20; i++) {
     await jm.create({ type: "a", data: i }, { type: "b", data: i * 2 });
+    await sleep(5000)
+    console.log(`Created job ${i}`)
   }
 
   jm.runAll();
-})();
+})().then(r => {
+  console.log('r', r)
+}).catch((e) => {
+  console.error('e', e)
+})

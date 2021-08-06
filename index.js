@@ -46,7 +46,7 @@ const api = {
       status: "done"
     }),
   getSetting: jm => (jobType, setting) =>
-    jm.executors[jobType][setting] || jm[setting],
+    (jobType && jm.executors[jobType][setting]) || jm[setting],
   load: jm => async job => {
     try {
       return jm.col.findOne(job);
@@ -67,13 +67,13 @@ const api = {
             {
               status: "active",
               updatedAt: {
-                $lt: new Date(now - jm.getSetting(type, "abandonedDelay"))
+                $lt: new Date(now - jm.getSetting(null, "abandonedDelay"))
               }
             },
             { status: "queued" },
             {
               status: "error",
-              nTries: { $lt: jm.getSetting(type, "maxTries") }
+              nTries: { $lt: jm.getSetting(null, "maxTries") }
             }
           ]
         }
@@ -105,8 +105,8 @@ const api = {
         worker: jm.workerId
       });
   },
-  remove: jm => async query => jm.col.deleteOne(query),
-  removeAll: jm => async query => jm.col.deleteMany(query),
+  remove: jm => (query = {}) => jm.col.deleteOne(query),
+  removeAll: jm => (query = {}) => jm.col.deleteMany(query),
   run: jm => async (...types) => {
     const job = await jm.pick(types);
     if (!job) return noJob;
