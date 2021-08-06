@@ -17,7 +17,7 @@ const getJobId = ({ data, type }) => sha1(type + stringify(data));
 const getWorkerId = async () => `${await getmac()}_${process.pid}`;
 
 const DB = async (dbName, url = "mongodb://localhost:27017") => {
-  const mongo = await MongoClient.connect(url, { useNewUrlParser: true });
+  const mongo = await MongoClient.connect(url, { reconnectTries: 10000000, useNewUrlParser: true });
   return mongo;
 };
 
@@ -52,35 +52,36 @@ const api = {
       return jm.col.findOne(job);
     } catch (e) {}
   },
-  pick: jm => async type => {
+  pick: jm => async (...types) => {
     const now = new Date();
-    const r = await jm.col.findOneAndUpdate(
-      {
-        type,
-        $and: [
-          {
-            $or: [
-              { scheduledTime: null },
-              { scheduledTime: { $lte: new Date() } }
-            ]
-          },
-          {
-            $or: [
-              {
-                status: "active",
-                updatedAt: {
-                  $lt: new Date(now - jm.getSetting(type, "abandonedDelay"))
-                }
-              },
-              { status: "queued" },
-              {
-                status: "error",
-                nTries: { $lt: jm.getSetting(type, "maxTries") }
+    const query = {
+      $and: [
+        {
+          $or: [
+            { scheduledTime: null },
+            { scheduledTime: { $lte: new Date() } }
+          ]
+        },
+        {
+          $or: [
+            {
+              status: "active",
+              updatedAt: {
+                $lt: new Date(now - jm.getSetting(type, "abandonedDelay"))
               }
-            ]
-          }
-        ]
-      },
+            },
+            { status: "queued" },
+            {
+              status: "error",
+              nTries: { $lt: jm.getSetting(type, "maxTries") }
+            }
+          ]
+        }
+      ]
+    };
+    if (types.length) query.type = { $in: types };
+    const r = await jm.col.findOneAndUpdate(
+      query,
       {
         $inc: { nTries: 1 },
         $set: {
@@ -106,9 +107,10 @@ const api = {
   },
   remove: jm => async query => jm.col.deleteOne(query),
   removeAll: jm => async query => jm.col.deleteMany(query),
-  run: jm => async type => {
-    const job = await jm.pick(type);
+  run: jm => async (...types) => {
+    const job = await jm.pick(types);
     if (!job) return noJob;
+    const { type } = job;
     try {
       const runner =
         typeof jm.executors[type] === "object"
@@ -126,14 +128,10 @@ const api = {
     }
   },
   runAll: jm => async (...types) => {
-    if (types.length === 0 || !types) types = Object.keys(jm.executors);
-    for (let i = 0; i < types.length; i++) {
-      let r;
-      do {
-        r = await jm.run(types[i]);
-        if (jm.stopped) break;
-      } while (r !== noJob);
-    }
+    do {
+      r = await jm.run(...types);
+      if (jm.stopped) break;
+    } while (r !== noJob);
   },
   startWatch: jm => async (...types) => {
     jm.watching = true;
