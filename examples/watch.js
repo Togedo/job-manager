@@ -35,9 +35,10 @@ const sleep = s => new Promise(done => setTimeout(done, s));
       { type: "c", data: i * 3.5 }
     );
   }
+  console.log('created all')
   jm.startWatch();
-  setTimeout(() => {
-    console.log("STOP! Hammer time!");
-    jm.stopWatch();
-  }, 30000);
+  // setTimeout(() => {
+  //   console.log("STOP! Hammer time!");
+  //   jm.stopWatch();
+  // }, 30000);
 })();
