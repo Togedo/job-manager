@@ -23,7 +23,7 @@ jm.create({
 });
 ```
 
-The consumer/worker instances of `JobManager` need to know how to execute certain tasks. That information needs to be provided in the `executors` object, in the form of asynchronous functions that are invoked with the job's `data` object as the first argument and the `JobManager` instance as the second. Different workers might have different executors and specialize in different job types. E.g.:
+The consumer/worker instances of `JobManager` need to know how to execute certain tasks. That information needs to be provided in the `executors` object, in the form of asynchronous functions that are invoked with the job's `data` object as the first argument and the `JobManager` instance as the second. Different workers might have different executors and specialize in different job types.
 ```
 const jm = await JobManager('mongoJobManagerDb', {
   executors: {
