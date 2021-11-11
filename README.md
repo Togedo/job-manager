@@ -20,7 +20,7 @@ const jm = await JobManager('databaseName')
 await jm.create({type: 'a', data: {a: 1}})
 ```
 
-# Completing jobs
+# Running jobs
 
 ## Run one job of type 'a'
 
