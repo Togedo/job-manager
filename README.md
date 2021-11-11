@@ -1,6 +1,6 @@
 # Job Manager
 
-A MongoDB-based job manager. Multi-producer and multi-consumer, with MongoDB as a single source of truth. Atomic updates guarantee each job is executed by at most one worker. An arbitraty amount of workers, typically running on separate threads and/or in separate processes, may be connected and execute jobs in parallel.
+A simple MongoDB-based job manager for orchestrating the execution of asynchronous tasks. Multi-producer and multi-consumer, with MongoDB as a single source of truth. Atomic updates guarantee each job is executed by at most one worker. An arbitraty amount of workers, typically running on separate threads and/or in separate processes, may be connected and execute jobs in parallel.
 
 # Installation
 
@@ -14,7 +14,27 @@ yarn add @togedo/job-manager
 const jm = await JobManager('databaseName')
 ```
 
-The `JobManager` object 
+The `JobManager` object serves both as a producer and a consumer. Typical producer code, i.e. the one queuing the tasks, looks like this:
+```
+const jm = await JobManager('mongoJobManagerDb')
+jm.create({
+  type: "myJob",
+  data: { inputField1: "a", inputField2: 1 }
+});
+```
+
+The consumer/worker instances of `JobManager` need to know how to execute certain tasks. That information needs to be provided in the `executors` object, in the form of asynchronous functions that are invoked with the job's `data` object as the first argument and the `JobManager` instance as the second. Different workers might have different executors and specialize in different job types. E.g.:
+```
+const jm = await JobManager('mongoJobManagerDb', {
+  executors: {
+    myJob: async ({ inputField1, inputField2 }) => {
+      console.log(`Executing myJob. Input 1: ${inputField1}, input 2: ${inputField2}`)
+    }
+  }
+})
+// Continuously execute and poll for new jobs of type 'myJob'
+await jm.startWatch('myJob')
+```
 
 # Creating jobs
 
