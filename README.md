@@ -1,6 +1,6 @@
 # Job Manager
 
-A MongoDB-based job manager. Multi-producer and multi-consumer, with MongoDB as a single source of truth. Atomic updates guarantee each job is executed by at most one worker. An arbitraty amount of workers may be connected and execute jobs in parallel.
+A MongoDB-based job manager. Multi-producer and multi-consumer, with MongoDB as a single source of truth. Atomic updates guarantee each job is executed by at most one worker. An arbitraty amount of workers, typically running on separate threads and/or in separate processes, may be connected and execute jobs in parallel.
 
 # Installation
 
@@ -13,6 +13,8 @@ yarn add @togedo/job-manager
 ```
 const jm = await JobManager('databaseName')
 ```
+
+The `JobManager` object 
 
 # Creating jobs
 
