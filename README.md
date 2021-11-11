@@ -1,6 +1,6 @@
 # Job Manager
 
-A simple MongoDB-based job manager for orchestrating the execution of asynchronous tasks. Multi-producer and multi-consumer, with MongoDB as a single source of truth. Atomic updates guarantee each job is executed by at most one worker. An arbitraty amount of workers, typically running on separate threads and/or in separate processes, may be connected and execute jobs in parallel.
+A simple MongoDB-based JavaScript job manager for orchestrating the execution of asynchronous tasks. Multi-producer and multi-consumer, with MongoDB as a single source of truth. Atomic updates guarantee each job is executed by at most one worker. An arbitraty amount of workers, typically running on separate threads and/or in separate processes, may be connected and execute jobs in parallel.
 
 The package makes it easy to queue various tasks for eventual execution. The rate of execution can be easily adjusted by spawning or terminating worker processes. As long as the MongoDB node or cluster is operational and there is at least one active, connected worker configured to handle the existing task types, the system will make progress. Then, each task will be invoked and completed (unless the task executor throws an error).
 
